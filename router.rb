@@ -1,42 +1,86 @@
 class Router
-  def initialize(meals_controller, customers_controller)
+  def initialize(meals_controller, customers_controller, sessions_controller)
     @meals_controller = meals_controller
     @customers_controller = customers_controller
+    @sessions_controller = sessions_controller
     @running = true
   end
 
   def run
-    # Tant que running est true
+    @employee = @sessions_controller.login
     while @running == true
-      # On affiche le menu
-      print_menu
-      # On récupère le réponse du user
-      choice = gets.chomp.to_i
-      # On redirige vers l'action du controller associé
-      route_action(choice)
+      # si l'employee est un manager
+      while @employee
+        if @employee.manager?
+          # alors on affiche un menu manager
+            print_manager_menu
+            choice = gets.chomp.to_i
+            route_manager_action(choice)
+          # on récupère son choix
+          # on route son action vers des actions manager
+        else
+          print_rider_menu
+          choice = gets.chomp.to_i
+          route_rider_action(choice)
+        end
+      end
     end
   end
 
   private
 
-  def print_menu
+  def print_manager_menu
     puts "-----------"
-    puts "----MENU----"
+    puts "----MANAGER MENU----"
     puts "------------"
     puts "1. Add a new meal"
     puts "2. List all meals"
     puts "3. Add a customer"
     puts "4. List all customers"
-    puts "5. Quit"
+    puts "5. Add new order"
+    puts "6. List all undelivered orders"
+    puts "7. Logout"
+    puts "8. Quit"
   end
 
-  def route_action(choice)
+  def route_manager_action(choice)
     case choice
     when 1 then @meals_controller.add
     when 2 then @meals_controller.list
     when 3 then @customers_controller.add
     when 4 then @customers_controller.list
-    when 5 then @running = false
+    when 5 then puts "Todo : Add new order"
+    when 6 then puts "Todo : List all undelivered orders"
+    when 7 then logout!
+    when 8 then stop!
     end
+  end
+
+  def print_rider_menu
+    puts "-----------"
+    puts "----RIDER MENU----"
+    puts "------------"
+    puts "1. List my undelivered orders"
+    puts "2. Mark order as delivered"
+    puts "3. Logout"
+    puts "4. Quit"
+  end
+
+  def route_rider_action(choice)
+    case choice
+    when 1 then puts "Todo : List my undelivered orders"
+    when 2 then puts "Todo : Mark order as delivered"
+    when 3 then logout!
+    when 4 then stop!
+    end
+  end
+
+  def logout!
+    @employee = nil
+  end
+
+  def stop!
+    logout!
+    @running = false
   end
 end
