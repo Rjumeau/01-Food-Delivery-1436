@@ -7,17 +7,17 @@ class Router
   end
 
   def run
-    @employee = @sessions_controller.login
     while @running == true
-      # si l'employee est un manager
-      while @employee
-        if @employee.manager?
+      @current_employee = @sessions_controller.login
+      while @current_employee
+        # si l'employee est un manager
+        if @current_employee.manager?
           # alors on affiche un menu manager
             print_manager_menu
+            # on récupère son choix
             choice = gets.chomp.to_i
+            # on route son action vers des actions manager
             route_manager_action(choice)
-          # on récupère son choix
-          # on route son action vers des actions manager
         else
           print_rider_menu
           choice = gets.chomp.to_i
