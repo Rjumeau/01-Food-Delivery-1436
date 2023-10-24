@@ -21,8 +21,9 @@ class SessionsController
       return employee
     # Sinon
     else
-      @sessions_view.print_wrong_credentials
       # Mauvais identifiants, recommencez
+      @sessions_view.print_wrong_credentials
+      # Relancer le login (récursion)
       login
     end
   end

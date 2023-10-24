@@ -1,8 +1,9 @@
 class Router
-  def initialize(meals_controller, customers_controller, sessions_controller)
+  def initialize(meals_controller, customers_controller, sessions_controller, orders_controller)
     @meals_controller = meals_controller
     @customers_controller = customers_controller
     @sessions_controller = sessions_controller
+    @orders_controller = orders_controller
     @running = true
   end
 
@@ -49,8 +50,8 @@ class Router
     when 2 then @meals_controller.list
     when 3 then @customers_controller.add
     when 4 then @customers_controller.list
-    when 5 then puts "Todo : Add new order"
-    when 6 then puts "Todo : List all undelivered orders"
+    when 5 then @orders_controller.add
+    when 6 then @orders_controller.list_undelivered_orders
     when 7 then logout!
     when 8 then stop!
     end
@@ -68,15 +69,15 @@ class Router
 
   def route_rider_action(choice)
     case choice
-    when 1 then puts "Todo : List my undelivered orders"
-    when 2 then puts "Todo : Mark order as delivered"
+    when 1 then @orders_controller.list_my_orders(@current_employee) # Current employee est forcément un rider ici
+    when 2 then @orders_controller.mark_as_delivered(@current_employee) # Current employee est forcément un rider ici
     when 3 then logout!
     when 4 then stop!
     end
   end
 
   def logout!
-    @employee = nil
+    @current_employee = nil
   end
 
   def stop!
