@@ -16,9 +16,9 @@ class OrdersController
   end
 
   def add
-    meal = select_meals
-    customer = select_customers
-    rider = select_employees
+    meal = select_meal
+    customer = select_customer
+    rider = select_employee
     order = Order.new(meal: meal, customer: customer, employee: rider)
     @order_repository.create(order)
   end
@@ -56,7 +56,7 @@ class OrdersController
     @order_view.display_orders(my_undelivered_orders)
   end
 
-  def select_meals
+  def select_meal
     # Récupérer la liste des meals via le repo meal
     meals = @meal_repository.all
     # Demander à la view d'afficher les meals
@@ -67,14 +67,14 @@ class OrdersController
     meals[index]
   end
 
-  def select_customers
+  def select_customer
     customers = @customer_repository.all
     @customer_view.display_customers(customers)
     index = @order_view.ask_for_index("customer")
     customers[index]
   end
 
-  def select_employees
+  def select_employee
     employees = @employee_repository.all_riders
     @sessions_view.display_employees(employees)
     index = @order_view.ask_for_index("employee")
